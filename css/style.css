@@ -1,0 +1,8 @@
+.main-content-container {
+    transition: opacity 0.75s ease;
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
