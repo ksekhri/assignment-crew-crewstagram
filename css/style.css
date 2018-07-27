@@ -8,10 +8,30 @@ body {
 }
 
 header {
+    height: 30px;
     margin: 15px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     text-align: center;
     font-weight: 600;
+}
+
+.header-nav {
+    width: 70px;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+#app-title {
+    cursor: pointer;
+    user-select: none;
+}
+
+main {
+    overflow-y: hidden;
 }
 
 footer {
@@ -23,15 +43,20 @@ footer {
 
 .main-content-container {
     margin: 0 auto;
+    max-height: 9999px;
 
     text-align: center;
 
-    transition: opacity 0.75s ease;
+    transition: opacity 0.75s ease, max-height 0s linear 0.75s;
 }
 
 .hidden {
     opacity: 0;
     pointer-events: none;
+}
+
+.main-content-container.hidden {
+    max-height: 0;
 }
 
 .image-list-image-container {
@@ -44,6 +69,15 @@ footer {
 
     cursor: pointer;
 }
+
+.image-list-image-container:first-child {
+    margin-top: 0;
+}
+
 .image-list-image {
     max-width: 100%;
+}
+
+#photo-details {
+    margin-top: -15px;
 }
