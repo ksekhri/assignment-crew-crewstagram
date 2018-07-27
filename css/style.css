@@ -1,8 +1,49 @@
+/* Shared content*/
+html * {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+header {
+    margin: 15px auto;
+
+    text-align: center;
+    font-weight: 600;
+}
+
+footer {
+    margin: 15px auto;
+
+    text-align: center;
+    font-weight: 300;
+}
+
 .main-content-container {
+    margin: 0 auto;
+
+    text-align: center;
+
     transition: opacity 0.75s ease;
 }
 
 .hidden {
     opacity: 0;
     pointer-events: none;
+}
+
+.image-list-image-container {
+    margin: 15px auto;
+    padding: 7.5px 7.5px 30px 7.5px;
+    border: 2px solid #efefef;
+    max-width: 90%;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+.image-list-image {
+    max-width: 100%;
 }
