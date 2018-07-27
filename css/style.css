@@ -107,6 +107,20 @@ footer {
     text-align: left;
 }
 
+#favorite-icon {
+    margin-right: 7.5px;
+
+    color: #000000;
+
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.25s linear;
+}
+
+#favorite-icon.favorited {
+    color: #FF353A;
+}
+
 .comment {
     width: 90%;
     margin: 0 auto;

@@ -140,10 +140,19 @@ function generatePhotoDetails() {
     var $favoritesContainer = document.createElement('div');
     $favoritesContainer.id = 'favorites-container';
     var $favoriteIcon = document.createElement('div');
-    $favoriteIcon.appendChild(document.createTextNode(favoritedImages[selectedImage.uuid] ? '♥' : '♡'));
+    $favoriteIcon.appendChild(document.createTextNode('♥'));
+    if (favoritedImages[selectedImage.uuid]) {
+        $favoriteIcon.classList.add('favorited');
+    } else {
+        $favoriteIcon.onclick = function() {
+            favoriteImage(selectedImage.uuid);
+        };
+    }
+    $favoriteIcon.id = 'favorite-icon';
     $favoritesContainer.appendChild($favoriteIcon);
     var $favoriteCount = document.createElement('div');
     $favoriteCount.innerHTML = selectedImage.favorites;
+    $favoriteCount.id = 'favorites-count';
     $favoritesContainer.appendChild($favoriteCount);
     $detailsContainer.appendChild($favoritesContainer);
 
@@ -166,16 +175,21 @@ function generatePhotoDetails() {
     $photoDetails.appendChild($detailsContainer);
 }
 
-function updateFavoriteCount(updatedFavoritedImage) {
-    favoritedImages[updatedFavoritedImage.uuid] = true;
-    selectedImage = updatedFavoritedImage;
-    var $favorites = document.getElementById('favorites-count');
-    $favorites.innerHTML = selectedImage.favorites;
+function updateFavoriteCount() {
+    favoritedImages[selectedImage.uuid] = true;
+
+    var $favoritesCount = document.getElementById('favorites-count');
+    $favoritesCount.innerHTML = selectedImage.favorites;
+    var $favoriteIcon = document.getElementById('favorite-icon');
+    $favoriteIcon.classList.add('favorited');
+    $favoriteIcon.onclick = function() {};
+
     setTimeout(fetchAndLoadPhotoList);
 }
 
-function reloadDataAndUpdateFavoriteCount() {
-    getData(CREWSTAGRAM_URL, updateFavoriteCount);
+function reloadDataAndUpdateFavoriteCount(newSelectedImage) {
+    selectedImage = newSelectedImage;
+    updateFavoriteCount();
 }
 
 function favoriteImage(uuid) {
