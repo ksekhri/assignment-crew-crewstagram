@@ -47,7 +47,7 @@ footer {
 
     text-align: center;
 
-    transition: opacity 0.75s ease, max-height 0s linear 0.75s;
+    transition: opacity 0.75s ease, max-height 0s linear 0s;
 }
 
 .hidden {
@@ -57,7 +57,23 @@ footer {
 
 .main-content-container.hidden {
     max-height: 0;
+    transition: opacity 0.75s ease, max-height 0s linear 0.75s;
 }
+
+/* Spinner */
+#spinner {
+    margin-top: -15px;
+    padding: 20px;
+    transition: margin-top 0s linear 0.75s, padding 0s linear 0.75s;
+}
+#spinner.hidden {
+    margin-top: 0;
+    padding: 0;
+    transition: margin-top 0s linear 0s, padding 0s linear 0s;
+
+}
+
+/* Image List */
 
 .image-list-image-container {
     margin: 15px auto;
