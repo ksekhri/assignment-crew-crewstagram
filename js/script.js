@@ -130,9 +130,12 @@ function generatePhotoDetails() {
     var $photoDetails = document.getElementById('photo-details');
     $photoDetails.innerHTML = '';
     var $imageContainer = generatePhotoFrame(selectedImage.imageUrl);
-    $imageContainer.ondblclick = function() {
-        favoriteImage(selectedImage.uuid);
-    };
+    $imageContainer.id = 'details-image-container';
+    if (!favoritedImages[selectedImage.uuid]) {
+        $imageContainer.ondblclick = function () {
+            favoriteImage(selectedImage.uuid);
+        };
+    }
 
     var $detailsContainer = document.createElement('div');
     $detailsContainer.classList.add('details-container');
@@ -183,6 +186,7 @@ function updateFavoriteCount() {
     var $favoriteIcon = document.getElementById('favorite-icon');
     $favoriteIcon.classList.add('favorited');
     $favoriteIcon.onclick = function() {};
+    document.getElementById('details-image-container').ondblclick = function() {};
 
     setTimeout(fetchAndLoadPhotoList);
 }
