@@ -4,14 +4,18 @@ var CREWSTAGRAM_URL = 'http://alpha-web.crewapp.com/crewstagram';
 
 var selectedImage = {};
 
+var favoritedImages = {};
+
+var photoList = [];
+
 // Helper methods
 
-function getData(url, callback) {
+function XHR(method, url, callback) {
     // Create XHR request
     var request = new XMLHttpRequest();
 
     // Create request to XHR object
-    request.open('GET', url);
+    request.open(method, url);
 
     // Send request to server
     request.send();
@@ -24,22 +28,12 @@ function getData(url, callback) {
     }
 }
 
+function getData(url, callback) {
+    XHR('GET', url, callback);
+}
+
 function postData(url, callback) {
-    // Create XHR request
-    var request = new XMLHttpRequest();
-
-    // Create request to XHR object
-    request.open('POST', url);
-
-    // Send request to server
-    request.send();
-
-    // Check request status and ready state
-    request.onreadystatechange = function () {
-        if (request.status === 200 && request.readyState === 4) {
-            callback(JSON.parse(request.responseText));
-        }
-    }
+    XHR('POST', url, callback);
 }
 
 function generatePhotoFrame(imageUrl) {
@@ -81,22 +75,34 @@ function showSpinner() {
 // Entry point
 
 function onLoad() {
-    fetchAndLoadPhotoList();
-    document.getElementById('back-button').onclick = showPhotoList
-    document.getElementById('app-title').onclick = showPhotoList;
+    fetchLoadAndShowPhotoList();
+    document.getElementById('back-button').onclick = showPhotoList;
+    document.getElementById('app-title').onclick = function() {
+        location.reload();
+    };
 }
 
 // Photo List methods
 
-function fetchAndLoadPhotoList() {
+function fetchLoadAndShowPhotoList() {
     showSpinner();
+    getData(CREWSTAGRAM_URL, generateAndShowPhotoList);
+}
+
+function fetchAndLoadPhotoList() {
     getData(CREWSTAGRAM_URL, generatePhotoList);
 }
 
-function generatePhotoList(jsonData) {
+function generateAndShowPhotoList(photoListJson) {
+    generatePhotoList(photoListJson);
+    showPhotoList();
+}
+
+function generatePhotoList(photoListJson) {
+    photoList = photoListJson.images;
     var $photoList = document.getElementById('photo-list');
     $photoList.innerHTML = '';
-    jsonData.images.forEach(function (image) {
+    photoList.forEach(function (image) {
 
         var $imageContainer = generatePhotoFrame(image.imageUrl);
         $imageContainer.onclick = function() {
@@ -105,8 +111,6 @@ function generatePhotoList(jsonData) {
 
         $photoList.appendChild($imageContainer);
     });
-
-    showPhotoList();
 }
 
 // Photo Details Method
@@ -114,7 +118,12 @@ function generatePhotoList(jsonData) {
 function fetchAndLoadPhotoDetails(image) {
     showSpinner();
     selectedImage = image;
+    generateAndShowPhotoDetails();
+}
+
+function generateAndShowPhotoDetails() {
     generatePhotoDetails();
+    showPhotoDetails();
 }
 
 function generatePhotoDetails() {
@@ -125,7 +134,50 @@ function generatePhotoDetails() {
         favoriteImage(selectedImage.uuid);
     };
 
-    $photoDetails.appendChild($imageContainer);
+    var $detailsContainer = document.createElement('div');
+    $detailsContainer.classList.add('details-container');
 
-    showPhotoDetails();
+    var $favoritesContainer = document.createElement('div');
+    $favoritesContainer.id = 'favorites-container';
+    var $favoriteIcon = document.createElement('div');
+    $favoriteIcon.appendChild(document.createTextNode(favoritedImages[selectedImage.uuid] ? '♥' : '♡'));
+    $favoritesContainer.appendChild($favoriteIcon);
+    var $favoriteCount = document.createElement('div');
+    $favoriteCount.innerHTML = selectedImage.favorites;
+    $favoritesContainer.appendChild($favoriteCount);
+    $detailsContainer.appendChild($favoritesContainer);
+
+    var $commentsContainer = document.createElement('div');
+    $commentsContainer.classList.add('comments-container');
+    selectedImage.comments.forEach((comment) => {
+        var $comment = document.createElement('div');
+        $comment.classList.add('comment');
+        var $username = document.createElement('span');
+        $username.classList.add('username');
+        $username.appendChild(document.createTextNode(comment.username + ': '));
+
+        $comment.appendChild($username);
+        $comment.appendChild(document.createTextNode(comment.body));
+        $commentsContainer.appendChild($comment);
+    });
+    $detailsContainer.appendChild($commentsContainer);
+
+    $photoDetails.appendChild($imageContainer);
+    $photoDetails.appendChild($detailsContainer);
+}
+
+function updateFavoriteCount(updatedFavoritedImage) {
+    favoritedImages[updatedFavoritedImage.uuid] = true;
+    selectedImage = updatedFavoritedImage;
+    var $favorites = document.getElementById('favorites-count');
+    $favorites.innerHTML = selectedImage.favorites;
+    setTimeout(fetchAndLoadPhotoList);
+}
+
+function reloadDataAndUpdateFavoriteCount() {
+    getData(CREWSTAGRAM_URL, updateFavoriteCount);
+}
+
+function favoriteImage(uuid) {
+    postData(CREWSTAGRAM_URL + '/' + uuid, reloadDataAndUpdateFavoriteCount);
 }
