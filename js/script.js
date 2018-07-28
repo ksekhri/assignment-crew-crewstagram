@@ -65,6 +65,7 @@ function showPhotoDetails() {
     hideMainItems();
     document.getElementById('photo-details').classList.remove('hidden');
     document.getElementById('back-button').classList.remove('hidden');
+    window.scrollTo(0, 0);
 }
 
 function showSpinner() {
