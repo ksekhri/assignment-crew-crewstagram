@@ -1,6 +1,6 @@
 # Crewstagram
 #### _Instagram clone for Crew_
-Created by Karan Sekhri on July 27, 2018 for Crew application process
+Created by Karan Sekhri on July 27, 2018 for Crew application process (4 hour limit)
 
 The project is a simplified clone of Instagram that we'll call Crewstagram.  The requirements of your finished Crewstagram application are as follows:
 * It must be built with only plain old html, css, JavaScript (es5), and jQuery
